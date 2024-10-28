@@ -71,6 +71,18 @@ const Quiz = () => {
     [correctnessLevel]
   )
 
+  const handleNextQuestion = () => {
+    if (data) {
+      if (currentQuestionIndex < data.length - 1) {
+        setCurrentQuestionIndex((prev) => prev + 1)
+      } else {
+        setCurrentQuestionIndex(0)
+      }
+      setSelectedAnswers({})
+      setIsLocked(false)
+    }
+  }
+
   if (isLoading) return <p>Loading...</p>
   if (isError) return <p>Error: {(error as Error).message}</p>
 
@@ -98,6 +110,9 @@ const Quiz = () => {
         <h2 className="result-message">
           {isLocked ? 'The answer is correct!' : 'The answer is incorrect'}
         </h2>
+        <button className="next-question-button" onClick={handleNextQuestion}>
+          Next Question
+        </button>
       </div>
     </motion.div>
   )
