@@ -1,5 +1,6 @@
 .answer-toggle-button {
   position: relative;
+  z-index: 10;
   border-radius: 100px;
   height: 80px;
   width: 100%;
@@ -9,6 +10,16 @@
   border: none;
   color: white;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    font-size: 20px;
+    height: 66px;
+  }
+
+  @media (max-width: 640px) {
+    font-size: 18px;
+    height: 48px;
+  }
 
   &.selected {
     color: black;
