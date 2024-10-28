@@ -1,20 +1,22 @@
+import { useEffect, useState } from 'react'
 import { Option } from '../../models/question'
 import { motion } from 'framer-motion'
 import AnswerToggleButton from '../AnswerToggleButton/AnswerToggleButton'
 import './AnswersToggle.scss'
-import { useEffect, useState } from 'react'
 
 interface AnswersToggleProps {
   answerId: number
   options: Option[]
   selectedOptionId: number
   onOptionSelect: (answerId: number, optionId: number) => void
+  isLocked: boolean
 }
 const AnswersToggle = ({
   answerId,
   options,
   selectedOptionId,
   onOptionSelect,
+  isLocked,
 }: AnswersToggleProps) => {
   const [currentOptionId, setCurrentOptionId] = useState(options[0].id)
 
@@ -23,7 +25,7 @@ const AnswersToggle = ({
   }, [selectedOptionId])
 
   const handleToggle = (optionId: number) => {
-    if (optionId === selectedOptionId) return
+    if (isLocked || optionId === selectedOptionId) return
 
     setCurrentOptionId(optionId) // Update selected option
     onOptionSelect(answerId, optionId)
@@ -49,6 +51,7 @@ const AnswersToggle = ({
             option={option}
             onClick={() => handleToggle(option.id)}
             isSelected={option.id === currentOptionId}
+            isLocked={isLocked}
           />
         )
       })}
