@@ -1,4 +1,4 @@
-const config = {
+module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2020,
@@ -18,7 +18,7 @@ const config = {
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
   ],
-  plugins: ['react', '@typescript-eslint/eslint-plugin'],
+  plugins: ['react', '@typescript-eslint'],
   rules: {
     'react/react-in-jsx-scope': 'off',
     '@typescript-eslint/no-unused-vars': ['warn'],
@@ -31,5 +31,3 @@ const config = {
     },
   },
 }
-
-export default config
