@@ -1,46 +1,82 @@
-# Getting Started with Create React App
+# Seneca Learning - Front-End Test
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The task is to make a component using React. The component is intended to test the user's knowledge of a topic, by having them move a series of toggles into the correct positions
 
-## Available Scripts
+## Installation
 
-In the project directory, you can run:
+1. **Clone the repository:**
 
-### `yarn start`
+```bash
+git clone git@github.com:Harvindsokhal/seneca-learning-fe-test.git
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+2. **Install dependencies:**
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```bash
+npm install || yarn install
+```
 
-### `yarn test`
+3. **Run the development server:**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm start || yarn start
+```
 
-### `yarn build`
+markdown
+Copy code
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Technology Stack
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **React & TypeScript**: Provides structure and type safety for the application, enhancing maintainability and scalability.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Framer Motion**: Manages animations for smooth toggle transitions and background color changes, creating an engaging user experience.
 
-### `yarn eject`
+- **SCSS**: Used for styling, following the Figma design as closely as possible for accurate visual representation. SCSS allows for modular, reusable, and responsive styling.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- **React Query**: Manages data fetching and caching, simulating API calls for a smoother and more realistic data-handling experience.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Project Structure
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### components/
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Contains the main **Quiz** component and its sub-components, including **AnswersToggle** and **AnswerToggleButton**.
 
-## Learn More
+### models/
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Defines **TypeScript interfaces** for questions and answer options, allowing for strict typing across the app.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### services/
+
+Contains the **fetchQuestions** function, which simulates fetching quiz questions from an API endpoint.
+
+### utils/
+
+Holds **helper functions** for gradient interpolation and array manipulation, aiding in reusable logic across components.
+
+### App.tsx
+
+The main app component responsible for rendering the quiz interface.
+
+## Assumptions and Limitations
+
+1. Data Mocking
+   This implementation simulates API calls for questions via the **fetchQuestions** function. In a production setup, a real API endpoint would be integrated to fetch live data.
+
+2. Gradient Levels
+   Background color transitions dynamically based on the percentage of correct answers. This uses a custom **interpolateGradient** function to achieve a smooth color gradient effect.
+
+3. Randomized Question Positioning
+   Questions may randomly appear in a pre-correct order; this behavior is currently allowed by the app logic and can be adjusted as needed.
+
+4. Answer Toggle Wrapping
+   Answer toggles will wrap to a new line only if a word length exceeds the preset limit of 25 characters, ensuring readability on various screen sizes.
+
+## Future Enhancements
+
+- **Dynamic Data Fetching**: Integrate with a live API to enable real-time question loading and improve scalability.
+
+- **Extended Question Format Support**: Expand support for more complex question types, allowing additional answer choices to accommodate diverse formats.
+
+- **Improved Mobile Scaling**: Replace the current hardcoded length limitation with a dynamic comparison between text length and button width, scaling down text if overlap is detected for a more adaptive design.
+
+- **State Management Optimization**: For larger codebases with multiple states, implement a state management library like Redux to streamline and optimize state handling.
