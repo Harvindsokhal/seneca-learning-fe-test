@@ -48,6 +48,7 @@ const AnswersToggle = ({
             key={option.id}
             option={option}
             onClick={() => handleToggle(option.id)}
+            isSelected={option.id === currentOptionId}
           />
         )
       })}

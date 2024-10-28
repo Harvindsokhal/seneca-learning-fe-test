@@ -9,4 +9,9 @@
   border: none;
   color: white;
   cursor: pointer;
+
+  &.selected {
+    color: black;
+    opacity: 0.3;
+  }
 }
