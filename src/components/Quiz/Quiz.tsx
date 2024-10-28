@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { motion } from 'framer-motion'
 import { Answer, Option, QuestionData } from '../../models/question'
 import { fetchQuestions } from '../../services/questions'
+import { interpolateGradient } from '../../utils/gradientUtils'
 import AnswersToggle from '../AnswersToggle/AnswersToggle'
 import './Quiz.scss'
 
@@ -45,11 +47,37 @@ const Quiz = () => {
     })
   }
 
+  const correctnessLevel = data
+    ? data[currentQuestionIndex].answers.reduce(
+        (acc: number, answer: Answer) => {
+          const selectedOptionId = selectedAnswers[answer.id]
+          const isCorrect = answer.options.some(
+            (option: Option) =>
+              option.id === selectedOptionId && option.isCorrect
+          )
+          return acc + (isCorrect ? 1 : 0)
+        },
+        0
+      ) / data[currentQuestionIndex].answers.length
+    : 0
+
+  const backgroundStyle = useMemo(
+    () => interpolateGradient(correctnessLevel),
+    [correctnessLevel]
+  )
+
   if (isLoading) return <p>Loading...</p>
   if (isError) return <p>Error: {(error as Error).message}</p>
 
   return (
-    <div className="quiz-container">
+    <motion.div
+      className="quiz-container"
+      initial={false}
+      animate={{
+        background: backgroundStyle,
+      }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+    >
       <div className="quiz-content">
         <h1 className="question-title">{data?.[currentQuestionIndex].title}</h1>
         {data?.[currentQuestionIndex].answers.map((answer: Answer) => (
@@ -66,7 +94,7 @@ const Quiz = () => {
           {isLocked ? 'The answer is correct!' : 'The answer is incorrect'}
         </h2>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
