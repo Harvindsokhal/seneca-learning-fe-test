@@ -80,3 +80,5 @@ The main app component responsible for rendering the quiz interface.
 - **Improved Mobile Scaling**: Replace the current hardcoded length limitation with a dynamic comparison between text length and button width, scaling down text if overlap is detected for a more adaptive design.
 
 - **State Management Optimization**: For larger codebases with multiple states, implement a state management library like Redux to streamline and optimize state handling.
+
+- **Enhanced Test Coverage**: Add comprehensive test coverage for the application
