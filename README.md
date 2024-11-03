@@ -22,9 +22,6 @@ npm install || yarn install
 npm start || yarn start
 ```
 
-markdown
-Copy code
-
 ## Technology Stack
 
 - **React & TypeScript**: Provides structure and type safety for the application, enhancing maintainability and scalability.
@@ -66,7 +63,7 @@ The main app component responsible for rendering the quiz interface.
    Background color transitions dynamically based on the percentage of correct answers. This uses a custom **interpolateGradient** function to achieve a smooth color gradient effect.
 
 3. Randomized Question Positioning
-   Questions may randomly appear in a pre-correct order; this behavior is currently allowed by the app logic and can be adjusted as needed.
+   Questions may randomly appear in a pre-correct order; this behavior is currently allowed by the app logic and can be adjusted as needed. - Fixed
 
 4. Answer Toggle Wrapping
    Answer toggles will wrap to a new line only if a word length exceeds the preset limit of 25 characters, ensuring readability on various screen sizes.

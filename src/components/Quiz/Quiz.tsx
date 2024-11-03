@@ -31,9 +31,20 @@ const Quiz = () => {
 
       const initialSelectedAnswers: { [key: number]: number } = {}
       shuffledAnswers.forEach((answer: Answer) => {
+        // Filter out the correct option for initialization
+        const incorrectOptions = answer.options.filter(
+          (option) => !option.isCorrect
+        )
+
+        // Randomly select from incorrect options if available, else picky any
         const randomOptionId =
-          answer.options[Math.floor(Math.random() * answer.options.length)].id
-        initialSelectedAnswers[answer.id] = randomOptionId
+          incorrectOptions.length > 0
+            ? incorrectOptions[
+                Math.floor(Math.random() * incorrectOptions.length)
+              ]
+            : answer.options[Math.floor(Math.random() & answer.options.length)]
+
+        initialSelectedAnswers[answer.id] = randomOptionId.id
       })
       setSelectedAnswers(initialSelectedAnswers)
     }
