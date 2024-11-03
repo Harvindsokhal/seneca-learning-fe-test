@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Option } from '../../models/question'
 import { motion } from 'framer-motion'
 import AnswerToggleButton from '../AnswerToggleButton/AnswerToggleButton'
@@ -19,18 +19,39 @@ const AnswersToggle = ({
   isLocked,
 }: AnswersToggleProps) => {
   const [currentOptionId, setCurrentOptionId] = useState(options[0].id)
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+  const [isMobile, setIsMobile] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef(document.createElement('canvas'))
 
   useEffect(() => {
     setCurrentOptionId(selectedOptionId)
   }, [selectedOptionId])
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    const context = canvasRef.current.getContext('2d')
+    if (!context) return
 
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+    const checkLayout = () => {
+      if (!containerRef.current) return
+
+      const containerWidth = containerRef.current.offsetWidth
+      const buttonWidth = containerWidth / options.length
+
+      context.font = '700 24px Mulish'
+
+      // Determine if any option text is too long for its button width
+      const shouldWrap = options.some((option) => {
+        const textWidth = context.measureText(option.text).width
+        return textWidth > buttonWidth - 20
+      })
+      setIsMobile(shouldWrap)
+    }
+
+    checkLayout()
+    window.addEventListener('resize', checkLayout)
+
+    return () => window.removeEventListener('resize', checkLayout)
+  }, [options])
 
   const handleToggle = (optionId: number) => {
     if (isLocked || optionId === selectedOptionId) return
@@ -43,36 +64,28 @@ const AnswersToggle = ({
     (option) => option.id === selectedOptionId
   )
 
-  const hasLongTextOption = options.some((option) => option.text.length > 20)
-
   const sliderSize = 100 / options.length
   const positionPercentage = selectedIndex * 100
 
   return (
     <div
-      className={`answers-toggle-container ${
-        hasLongTextOption && isMobile ? 'wrap' : ''
-      }`}
+      ref={containerRef}
+      className={`answers-toggle-container ${isMobile ? 'wrap' : ''}`}
     >
       <motion.div
-        className={`toggle-slider ${
-          hasLongTextOption && isMobile ? 'wrap' : ''
-        }`}
+        className={`toggle-slider ${isMobile ? 'wrap' : ''}`}
         initial={{
-          y: isMobile && hasLongTextOption ? `${positionPercentage}%` : 0,
-          x: !isMobile || !hasLongTextOption ? `${positionPercentage}%` : 0,
+          y: isMobile ? `${positionPercentage}%` : 0,
+          x: !isMobile ? `${positionPercentage}%` : 0,
         }}
         animate={{
-          x: !isMobile || !hasLongTextOption ? `${positionPercentage}%` : 0,
-          y:
-            hasLongTextOption && isMobile
-              ? `${positionPercentage}%`
-              : undefined,
+          x: !isMobile ? `${positionPercentage}%` : 0,
+          y: isMobile ? `${positionPercentage}%` : undefined,
         }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         style={{
-          width: !isMobile || !hasLongTextOption ? `${sliderSize}%` : '100%',
-          height: isMobile && hasLongTextOption ? `${sliderSize}%` : '100%',
+          width: !isMobile ? `${sliderSize}%` : '100%',
+          height: isMobile ? `${sliderSize}%` : '100%',
         }}
       />
       {options.map((option) => {

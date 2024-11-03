@@ -66,7 +66,7 @@ The main app component responsible for rendering the quiz interface.
    Questions may randomly appear in a pre-correct order; this behavior is currently allowed by the app logic and can be adjusted as needed. - Fixed
 
 4. Answer Toggle Wrapping
-   Answer toggles will wrap to a new line only if a word length exceeds the preset limit of 25 characters, ensuring readability on various screen sizes.
+   Answer toggles will wrap to a new line only if a word length exceeds the preset limit of 25 characters, ensuring readability on various screen sizes. - Fixed
 
 ## Future Enhancements
 
@@ -74,7 +74,7 @@ The main app component responsible for rendering the quiz interface.
 
 - **Extended Question Format Support**: Expand support for more complex question types, allowing additional answer choices to accommodate diverse formats.
 
-- **Improved Mobile Scaling**: Replace the current hardcoded length limitation with a dynamic comparison between text length and button width, scaling down text if overlap is detected for a more adaptive design.
+- **Improved Mobile Scaling**: Replace the current hardcoded length limitation with a dynamic comparison between text length and button width, scaling down text if overlap is detected for a more adaptive design. - Fixed
 
 - **State Management Optimization**: For larger codebases with multiple states, implement a state management library like Redux to streamline and optimize state handling.
 
