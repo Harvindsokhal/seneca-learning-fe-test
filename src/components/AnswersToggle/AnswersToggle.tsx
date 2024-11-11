@@ -74,6 +74,7 @@ const AnswersToggle = ({
     >
       <motion.div
         className={`toggle-slider ${isMobile ? 'wrap' : ''}`}
+        layout
         initial={{
           y: isMobile ? `${positionPercentage}%` : 0,
           x: !isMobile ? `${positionPercentage}%` : 0,
