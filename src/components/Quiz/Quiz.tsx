@@ -17,7 +17,6 @@ const Quiz = ({ data }: QuizProps) => {
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: number
   }>({})
-  const [isLocked, setIsLocked] = useState(false)
   const [shuffledAnswers, setShuffledAnswers] = useState<Answer[]>([])
 
   useEffect(() => {
@@ -56,7 +55,6 @@ const Quiz = ({ data }: QuizProps) => {
   }, [data, currentQuestionIndex])
 
   const handleAnswerSelect = (answerId: number, optionId: number) => {
-    if (isLocked) return
     setSelectedAnswers((prev) => {
       const updatedAnswers = { ...prev, [answerId]: optionId }
 
@@ -66,7 +64,6 @@ const Quiz = ({ data }: QuizProps) => {
           updatedAnswers[answer.id] ===
           answer.options.find((option: Option) => option.isCorrect)?.id
       )
-      setIsLocked(allCorrect)
 
       return updatedAnswers
     })
@@ -93,7 +90,6 @@ const Quiz = ({ data }: QuizProps) => {
       setCurrentQuestionIndex(0)
     }
     setSelectedAnswers({})
-    setIsLocked(false)
   }
 
   return (
@@ -114,11 +110,13 @@ const Quiz = ({ data }: QuizProps) => {
             options={answer.options}
             selectedOptionId={selectedAnswers[answer.id]}
             onOptionSelect={handleAnswerSelect}
-            isLocked={isLocked}
+            isLocked={correctnessLevel === 1}
           />
         ))}
         <h2 className="result-message">
-          {isLocked ? 'The answer is correct!' : 'The answer is incorrect'}
+          {correctnessLevel === 1
+            ? 'The answer is correct!'
+            : 'The answer is incorrect'}
         </h2>
         <button className="next-question-button" onClick={handleNextQuestion}>
           Next Question
