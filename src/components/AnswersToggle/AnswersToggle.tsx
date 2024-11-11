@@ -18,14 +18,9 @@ const AnswersToggle = ({
   onOptionSelect,
   isLocked,
 }: AnswersToggleProps) => {
-  const [currentOptionId, setCurrentOptionId] = useState(options[0].id)
   const [isMobile, setIsMobile] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef(document.createElement('canvas'))
-
-  useEffect(() => {
-    setCurrentOptionId(selectedOptionId)
-  }, [selectedOptionId])
 
   useEffect(() => {
     const context = canvasRef.current.getContext('2d')
@@ -56,7 +51,6 @@ const AnswersToggle = ({
   const handleToggle = (optionId: number) => {
     if (isLocked || optionId === selectedOptionId) return
 
-    setCurrentOptionId(optionId) // Update selected option
     onOptionSelect(answerId, optionId)
   }
 
@@ -95,7 +89,7 @@ const AnswersToggle = ({
             key={option.id}
             option={option}
             onClick={() => handleToggle(option.id)}
-            isSelected={option.id === currentOptionId}
+            isSelected={option.id === selectedOptionId}
             isLocked={isLocked}
           />
         )
