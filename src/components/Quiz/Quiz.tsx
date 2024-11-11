@@ -29,22 +29,29 @@ const Quiz = ({ data }: QuizProps) => {
     setShuffledAnswers(shuffleArray(shuffledAnswers))
 
     const initialSelectedAnswers: { [key: number]: number } = {}
-    shuffledAnswers.forEach((answer: Answer) => {
-      // Filter out the correct option for initialization
-      const incorrectOptions = answer.options.filter(
-        (option) => !option.isCorrect
+    let correctCount = 0
+
+    // Select initial answers
+    shuffledAnswers.forEach((answer: Answer, index: number) => {
+      const randomOption =
+        answer.options[Math.floor(Math.random() * answer.options.length)]
+      initialSelectedAnswers[answer.id] = randomOption.id
+
+      // Track if the selected answer is correct
+      if (randomOption.isCorrect) correctCount++
+    })
+
+    // If all selected answers are correct, force the last answer to be incorrect
+    if (correctCount === shuffledAnswers.length) {
+      const lastAnswer = shuffledAnswers[shuffledAnswers.length - 1]
+      const incorrectOption = lastAnswer.options.find(
+        (option: Option) => !option.isCorrect
       )
 
-      // Randomly select from incorrect options if available, else picky any
-      const randomOptionId =
-        incorrectOptions.length > 0
-          ? incorrectOptions[
-              Math.floor(Math.random() * incorrectOptions.length)
-            ]
-          : answer.options[Math.floor(Math.random() & answer.options.length)]
-
-      initialSelectedAnswers[answer.id] = randomOptionId.id
-    })
+      if (incorrectOption) {
+        initialSelectedAnswers[lastAnswer.id] = incorrectOption.id
+      }
+    }
     setSelectedAnswers(initialSelectedAnswers)
   }, [data, currentQuestionIndex])
 
