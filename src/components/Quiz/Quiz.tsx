@@ -55,18 +55,7 @@ const Quiz = ({ data }: QuizProps) => {
   }, [data, currentQuestionIndex])
 
   const handleAnswerSelect = (answerId: number, optionId: number) => {
-    setSelectedAnswers((prev) => {
-      const updatedAnswers = { ...prev, [answerId]: optionId }
-
-      // Check if all answers are correct after updating the state
-      const allCorrect = shuffledAnswers.every(
-        (answer: Answer) =>
-          updatedAnswers[answer.id] ===
-          answer.options.find((option: Option) => option.isCorrect)?.id
-      )
-
-      return updatedAnswers
-    })
+    setSelectedAnswers((prev) => ({ ...prev, [answerId]: optionId }))
   }
 
   const correctnessLevel =
@@ -102,7 +91,7 @@ const Quiz = ({ data }: QuizProps) => {
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
       <div className="quiz-content">
-        <h1 className="question-title">{data?.[currentQuestionIndex].title}</h1>
+        <h1 className="question-title">{data[currentQuestionIndex].title}</h1>
         {shuffledAnswers.map((answer: Answer) => (
           <AnswersToggle
             key={answer.id}
