@@ -8,11 +8,11 @@ import { shuffleArray } from '../../utils/arrayUtils'
 import AnswersToggle from '../AnswersToggle/AnswersToggle'
 import './Quiz.scss'
 
-const Quiz = () => {
-  const { data, isLoading, isError, error } = useQuery<QuestionData>({
-    queryKey: ['questions'],
-    queryFn: fetchQuestions,
-  })
+interface QuizProps {
+  data: QuestionData
+}
+
+const Quiz = ({ data }: QuizProps) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: number
@@ -21,37 +21,35 @@ const Quiz = () => {
   const [shuffledAnswers, setShuffledAnswers] = useState<Answer[]>([])
 
   useEffect(() => {
-    if (data) {
-      const question = data[currentQuestionIndex]
-      const shuffledAnswers = question.answers.map((answer: Answer) => ({
-        ...answer,
-        options: shuffleArray(answer.options),
-      }))
-      setShuffledAnswers(shuffleArray(shuffledAnswers))
+    const question = data[currentQuestionIndex]
+    const shuffledAnswers = question.answers.map((answer: Answer) => ({
+      ...answer,
+      options: shuffleArray(answer.options),
+    }))
+    setShuffledAnswers(shuffleArray(shuffledAnswers))
 
-      const initialSelectedAnswers: { [key: number]: number } = {}
-      shuffledAnswers.forEach((answer: Answer) => {
-        // Filter out the correct option for initialization
-        const incorrectOptions = answer.options.filter(
-          (option) => !option.isCorrect
-        )
+    const initialSelectedAnswers: { [key: number]: number } = {}
+    shuffledAnswers.forEach((answer: Answer) => {
+      // Filter out the correct option for initialization
+      const incorrectOptions = answer.options.filter(
+        (option) => !option.isCorrect
+      )
 
-        // Randomly select from incorrect options if available, else picky any
-        const randomOptionId =
-          incorrectOptions.length > 0
-            ? incorrectOptions[
-                Math.floor(Math.random() * incorrectOptions.length)
-              ]
-            : answer.options[Math.floor(Math.random() & answer.options.length)]
+      // Randomly select from incorrect options if available, else picky any
+      const randomOptionId =
+        incorrectOptions.length > 0
+          ? incorrectOptions[
+              Math.floor(Math.random() * incorrectOptions.length)
+            ]
+          : answer.options[Math.floor(Math.random() & answer.options.length)]
 
-        initialSelectedAnswers[answer.id] = randomOptionId.id
-      })
-      setSelectedAnswers(initialSelectedAnswers)
-    }
+      initialSelectedAnswers[answer.id] = randomOptionId.id
+    })
+    setSelectedAnswers(initialSelectedAnswers)
   }, [data, currentQuestionIndex])
 
   const handleAnswerSelect = (answerId: number, optionId: number) => {
-    if (isLocked || !data) return
+    if (isLocked) return
     setSelectedAnswers((prev) => {
       const updatedAnswers = { ...prev, [answerId]: optionId }
 
@@ -67,15 +65,14 @@ const Quiz = () => {
     })
   }
 
-  const correctnessLevel = data
-    ? shuffledAnswers.reduce((acc: number, answer: Answer) => {
-        const selectedOptionId = selectedAnswers[answer.id]
-        const isCorrect = answer.options.some(
-          (option: Option) => option.id === selectedOptionId && option.isCorrect
-        )
-        return acc + (isCorrect ? 1 : 0)
-      }, 0) / shuffledAnswers.length
-    : 0
+  const correctnessLevel =
+    shuffledAnswers.reduce((acc: number, answer: Answer) => {
+      const selectedOptionId = selectedAnswers[answer.id]
+      const isCorrect = answer.options.some(
+        (option: Option) => option.id === selectedOptionId && option.isCorrect
+      )
+      return acc + (isCorrect ? 1 : 0)
+    }, 0) / shuffledAnswers.length
 
   const backgroundStyle = useMemo(
     () => interpolateGradient(correctnessLevel),
@@ -83,19 +80,14 @@ const Quiz = () => {
   )
 
   const handleNextQuestion = () => {
-    if (data) {
-      if (currentQuestionIndex < data.length - 1) {
-        setCurrentQuestionIndex((prev) => prev + 1)
-      } else {
-        setCurrentQuestionIndex(0)
-      }
-      setSelectedAnswers({})
-      setIsLocked(false)
+    if (currentQuestionIndex < data.length - 1) {
+      setCurrentQuestionIndex((prev) => prev + 1)
+    } else {
+      setCurrentQuestionIndex(0)
     }
+    setSelectedAnswers({})
+    setIsLocked(false)
   }
-
-  if (isLoading) return <p>Loading...</p>
-  if (isError) return <p>Error: {(error as Error).message}</p>
 
   return (
     <motion.div
